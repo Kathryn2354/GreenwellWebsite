@@ -35,8 +35,9 @@ export class Home extends Component {
             alertMessage: null,
             downloadFileName: "",
             uploading: false,
-
-            role: null
+            searchBy: "fileName",
+            role: null,
+            name: null
 
         };
         // check and create the local storage
@@ -45,15 +46,14 @@ export class Home extends Component {
 
         // check the state of the user and get the files
         this.populateState();
-
     }
-
     //Create storage on constructor
     async createStorage() {
         const token = await authService.getAccessToken();
         fetch('api/GreenWellFiles/CreateLocalStorage', {
             headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
         });
+
     }
 
     // method that gets the state of the user and get the files accordingly
@@ -79,7 +79,9 @@ export class Home extends Component {
                 var t = [];
                 for (i = 0; i < json.files.length; i++) {
                     var r1 = {
-                        key: json.files[i]
+                        key: json.files[i],
+                        size: 1000,
+                        modified: +Moment(),
                     };
                     t.push(r1);
                 }
@@ -96,7 +98,8 @@ export class Home extends Component {
         // get the state of the user and pass role of the user to previous method to get files
         const [user] = await Promise.all([authService.getUser()]);
         this.setState({
-            role: user && user.role
+            role: user && user.role,
+            name: user && user.name
         }, () => getFiles(this.state.role == "Administrator"));
     }
 
@@ -115,6 +118,7 @@ export class Home extends Component {
             uploadFilePath: selection.key,
             downloadFileName: ""
         });
+
     }
 
 
@@ -122,7 +126,7 @@ export class Home extends Component {
         // create object
         let formData = new FormData();
         formData.append("folderPath", key);
-        alert(key);
+        //alert(key);
         // define async function
         let createFolder = async () => {
             const token = await authService.getAccessToken();
@@ -135,13 +139,14 @@ export class Home extends Component {
             if (json.status === "200") {
                 this.setState(state => {
                     state.files = state.files.concat([{
-                        key: key
+                        key: key,
                     }])
                     return state
                 })
-                alert(json.message);
             }
-            else alert(json.message);
+            else {
+                this.showAlertModal(json.message);
+            }
         }
         // call it
         createFolder();
@@ -173,9 +178,10 @@ export class Home extends Component {
                     state.files = newFiles;
                     return state
                 });
-                alert(json.message);
             }
-            else alert(json.message);
+            else {
+                this.showAlertModal(json.message);
+            }
         }
         // call it
         deleteFolder();
@@ -186,6 +192,12 @@ export class Home extends Component {
         if (oldKey.charAt(0) == "/") {
             oldKey = oldKey.substring(1, oldKey.length);
         }
+
+        //If the user didn't rename the holder, we don't call the method.
+        if (oldKey === newKey) {
+            return
+        }
+
         const rf = [oldKey, newKey]
         // create async function
         let renameFolder = async (p) => {
@@ -208,7 +220,6 @@ export class Home extends Component {
                             newFiles.push({
                                 ...file,
                                 key: file.key.replace(oldKey, newKey),
-                                modified: +Moment(),
                             })
                         } else {
                             newFiles.push(file)
@@ -219,9 +230,11 @@ export class Home extends Component {
                     state.files = newFiles
                     return state
                 })
-                alert(json.message);
             }
-            else alert(json.message);
+            else {
+                this.showAlertModal(json.message);
+            }
+
         }
         // call it
         renameFolder(rf);
@@ -230,6 +243,12 @@ export class Home extends Component {
     handleRenameFile = (oldKey, newKey) => {
         // store old and new file names
         const rf = [oldKey, newKey]
+
+        //If the old name and the new name are the same, we don't call the method
+        if (oldKey === newKey) {
+            return
+        }
+
         // create async function
         let renameFile = async (p) => {
             const token = await authService.getAccessToken();
@@ -247,11 +266,13 @@ export class Home extends Component {
                 this.setState(state => {
                     this.setState(state => {
                         const newFiles = []
+                        //Add all the new files to teh file browser
                         state.files.map((file) => {
                             if (file.key === oldKey) {
                                 newFiles.push({
                                     ...file,
                                     key: newKey,
+                                    size: 1000,
                                     modified: +Moment(),
                                 })
                             } else {
@@ -264,9 +285,10 @@ export class Home extends Component {
                         return state
                     })
                 })
-                alert(json.message);
             }
-            else alert(json.message);
+            else {
+                this.showAlertModal(json.message);
+            }
         }
         // call it
         renameFile(rf);
@@ -302,9 +324,10 @@ export class Home extends Component {
                     state.downloadFileName = ""
                     return state
                 })
-                alert(json.message);
             }
-            else alert(json.message);
+            else {
+                this.showAlertModal(json.message);
+            }
         }
         // call it
         deleteFile(df);
@@ -319,6 +342,13 @@ export class Home extends Component {
             uploading: false
         });
     }
+
+    showAlertModal = (message) => {
+        this.setState({
+            showAlertModal: true,
+            alertMessage: message
+        })
+    } 
 
     handleModalShow = () => {
         this.setState({
@@ -358,6 +388,7 @@ export class Home extends Component {
             formData.append("path", fullPath)
             formData.append("f", this.state.uploadFile);
             formData.append("tags", tags);
+            formData.append("author", this.state.name)
             if (document.getElementById("adminCheckBox") == null)
                 formData.append("adminAccessOnly", document.getElementById("adminCheckBox"));
             else
@@ -365,18 +396,24 @@ export class Home extends Component {
 
             const token = await authService.getAccessToken();
             const response = await fetch((this.state.role == "Administrator") ? 'api/GreenWellFiles/AdminAddFileFromUpload' : 'api/GreenWellFiles/AddFileFromUpload', {
+
                 method: 'POST',
                 body: formData,
                 headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
             });
 
             const json = await response.json();
+            //Even if successful, we don't add the file to the browser if the user isn't an admin because it needs to be approved if they aren't an Administrator.
             if (json.status === "200") {
-                //We don't add the file to the browser if the user isn't an admin becuase it needs to be approved.
+                //If they are an Administrator we add the uploaded file to the file browser
                 if (this.state.role == "Administrator") {
                     this.setState(state => {
                         const addedNewFile = [];
-                        addedNewFile.push({ key: this.state.uploadFilePath + this.state.uploadFileName });
+                        addedNewFile.push({ 
+                          key: this.state.uploadFilePath + this.state.uploadFileName,
+                          size: 1000,
+                          modified: +Moment(),
+                        });
 
                         const uniqueNewFiles = []
                         addedNewFile.map((newFile) => {
@@ -388,43 +425,43 @@ export class Home extends Component {
                             })
                             if (!exists) {
                                 uniqueNewFiles.push(newFile)
+
                             }
                         })
                         state.files = state.files.concat(uniqueNewFiles)
                         return state
 
                     });
+                    //Hide the upload modal
+                    this.setState({
+                        showModal: false,
+                        uploadFile: null,
+                        uploadFileName: "",
+                        uploadFilePath: "",
+                        uploading: false
+                    });
                 }
+                //Otherwise we close the modal and tell the user the file has been sent to upload.
                 else {
                     this.setState({
-                        showAlertModal: true,
                         showModal: false,
                         uploadFile: null,
                         uploadFileName: "",
                         uploadFilePath: "",
                         uploading: false,
-                        alertMessage: "File has been sent for approval."
                     })
-                    return
+                    this.showAlertModal("File has been sent for approval");
                 }
-                this.setState({
-                    showModal: false,
-                    uploadFile: null,
-                    uploadFileName: "",
-                    uploadFilePath: "",
-                    uploading: false
-                });
             }
             else if (json.status === "201") {
                 this.setState({
-                    showAlertModal: true,
                     showModal: false,
                     uploadFile: null,
                     uploadFileName: "",
                     uploadFilePath: "",
                     uploading: false,
-                    alertMessage: "Unable to upload duplicate file."
-                })
+                });
+                this.showAlertModal("Unable to upload duplicate files.");
             }
         }
         addFile();
@@ -439,14 +476,24 @@ export class Home extends Component {
             let formData = new FormData();
             formData.append("filePath", filePath)
             const token = await authService.getAccessToken();
-            const response = await fetch('api/GreenWellFiles/DownloadAFile', {
+            const response = await fetch((this.state.role == "Administrator") ? 'api/GreenWellFiles/AdminDownloadAFile' : 'api/GreenWellFiles/DownloadAFile', {
                 method: 'POST',
                 body: formData,
                 headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
             });
 
-            const blob = await response.blob();
-            saveAs(blob, fileName);
+            if (response.ok) {
+                const blob = await response.blob();
+                saveAs(blob, fileName);
+            }
+            else if (response.status === 401) {
+                console.log(response)
+                this.showAlertModal("Your not authorized to download that file.");
+            }
+            else{
+                console.log(response)
+                this.showAlertModal("Unable to download file.");
+            }
         }
         downloadFile();
     }
@@ -456,7 +503,9 @@ export class Home extends Component {
         var t = [];
         for (i = 0; i < fs.length; i++) {
             var r1 = {
-                key: fs[i]
+                key: fs[i],
+                size: 1000,
+                modified: +Moment(),
             };
             t.push(r1);
         }
@@ -476,7 +525,7 @@ export class Home extends Component {
         if (uploadFileName === "") {
             modalHeader = (
                 <Modal.Header style={{ backgroundColor: "whiteSmoke" }} closeButton>
-                    <Modal.Title>No File Selected.</Modal.Title>
+                    <Modal.Title>Upload A File.</Modal.Title>
                 </Modal.Header>
             );
             modalBody = (
@@ -537,6 +586,7 @@ export class Home extends Component {
                 onSelectFile={this.handleFileSelection}
                 onSelectFolder={this.handleFolderSelection}
 
+
             // onCreateFiles={this.handleCreateFiles}
 
             //onMoveFolder={this.handleRenameFolder}
@@ -564,6 +614,7 @@ export class Home extends Component {
                         onRenameFile={this.handleRenameFile}
                         onSelectFile={this.handleFileSelection}
                         onSelectFolder={this.handleFolderSelection}
+
 
                     // onCreateFiles={this.handleCreateFiles}
 
@@ -702,6 +753,7 @@ class GreenWellNavMenu extends Component {
             let data = [p, this.state.searchBy, this.state.role];
             const token = await authService.getAccessToken();
             const response = await fetch((this.state.role == "Administrator") ? 'api/GreenWellFiles/AdminSearch' : 'api/GreenWellFiles/Search', {
+
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -737,12 +789,12 @@ class GreenWellNavMenu extends Component {
                     <Dropdown onSelect={(evt) => this.setSearchBy(evt)} as={ButtonGroup}>
                         <Dropdown.Toggle id="dropdown" />
                         <Dropdown.Menu>
-                            <Dropdown.Item className="drop-down-item-style" eventKey="fileName">Search By File Name</Dropdown.Item>
-                            <Dropdown.Item className="drop-down-item-style" eventKey="tags"> By Tags</Dropdown.Item>
+                            <Dropdown.Item className="drop-down-item-style" eventKey="fileName" active={this.state.searchBy === "fileName"}>Search By File Name</Dropdown.Item>
+                            <Dropdown.Item className="drop-down-item-style" eventKey="tags" active={this.state.searchBy === "tags"}> By Tags</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                     <Form inline>
-                        <FormControl id="search" onChange={() => this.Search(document.getElementById("search").value)} style={{ height: "45px", backgroundColor: "transparent", border: "2px solid white" }} type="text" placeholder="Search" />
+                        <FormControl id="search" onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); }}} onChange={() => this.Search(document.getElementById("search").value)} style={{ height: "45px", backgroundColor: "transparent", border: "2px solid white" }} type="text" placeholder="Search" />
                         <Button onClick={() => this.Search(document.getElementById("search").value)} className="search-button">
                             <Image src={searchButton} />
                         </Button>
