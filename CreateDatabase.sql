@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `greenwelldatabase` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+CREATE DATABASE  IF NOT EXISTS `greenwelldatabase` /*!40100 DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `greenwelldatabase`;
 -- MySQL dump 10.13  Distrib 8.0.19, for Win64 (x86_64)
 --
@@ -28,7 +28,7 @@ CREATE TABLE `__efmigrationshistory` (
   `MigrationId` varchar(95) NOT NULL,
   `ProductVersion` varchar(32) NOT NULL,
   PRIMARY KEY (`MigrationId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -49,8 +49,14 @@ CREATE TABLE `files` (
   `adminOnly` tinyint DEFAULT NULL,
   `approved` tinyint DEFAULT NULL,
   PRIMARY KEY (`fileID`),
+
+  KEY `author` (`author`),
+  CONSTRAINT `files_ibfk_2` FOREIGN KEY (`author`) REFERENCES `users` (`userID`)
+) ENGINE=InnoDB AUTO_INCREMENT=149 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+=======
   KEY `author` (`author`)
 ) ENGINE=InnoDB AUTO_INCREMENT=287 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +75,11 @@ CREATE TABLE `tagmap` (
   KEY `tagId_idx` (`tagId`),
   CONSTRAINT `fileId` FOREIGN KEY (`fileId`) REFERENCES `files` (`fileID`),
   CONSTRAINT `tagId` FOREIGN KEY (`tagId`) REFERENCES `tags` (`tagID`)
+
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+=======
 ) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -83,7 +93,37 @@ CREATE TABLE `tags` (
   `tagName` varchar(30) DEFAULT NULL,
   `tagID` int NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`tagID`)
+
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tags`
+--
+
+LOCK TABLES `tags` WRITE;
+/*!40000 ALTER TABLE `tags` DISABLE KEYS */;
+INSERT INTO `tags` VALUES ('admin',65),('approved?',66),('library',67),('Scary',68),('share',69);
+/*!40000 ALTER TABLE `tags` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `userName` varchar(30) DEFAULT NULL,
+  `userID` int NOT NULL,
+  `aspnetRoles` varchar(8) DEFAULT NULL,
+  PRIMARY KEY (`userID`),
+  CONSTRAINT `users_chk_1` CHECK (((`aspnetRoles` = _utf8mb4'Admin') or (`aspnetRoles` = _utf8mb4'Employee')))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+=======
 ) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
