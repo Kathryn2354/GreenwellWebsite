@@ -6,8 +6,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Greenwell.Data;
 using Greenwell.Data.Models;
+using Greenwell.Models;
+using Greenwell.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
@@ -21,9 +25,14 @@ namespace Greenwell.Controllers
     public class GreenWellFilesController : Controller
     {
         private readonly greenwelldatabaseContext _context;
-        public GreenWellFilesController(greenwelldatabaseContext context)
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IEmailSender emailSender;
+
+        public GreenWellFilesController(greenwelldatabaseContext context, UserManager<ApplicationUser> userManager, IEmailSender emailSender)
         {
             _context = context;
+            this.userManager = userManager;
+            this.emailSender = emailSender;
         }
 
         //Return all files from the Database and add to a list excluding admin only.
@@ -156,17 +165,15 @@ namespace Greenwell.Controllers
         }
 
         //Functionality to add a file from the User for default users.
-
-            //TODO Add email notication about file being uploaded.
         [HttpPost("AddFileFromUpload")]
-        public async Task<ActionResult> AddFileFromUpload([FromForm] string path, [FromForm] IFormFile f, string[] tags)
+        public async Task<ActionResult> AddFileFromUpload([FromForm] string path, [FromForm] string author,[FromForm] IFormFile f, string[] tags)
         {
 
-            if (_context.Files.Where(f => (f.FullPath.Equals(path))).Any())
+            if (_context.Files.Where(g => (g.FullPath.Equals(path))).Any())
             {
                 return Ok(new { message = "Unable to upload duplicate file.", status = "201" });
             }
-            
+
             try
             {
                 //If there are tags associated with the file, split at commas to create a list.
@@ -204,7 +211,8 @@ namespace Greenwell.Controllers
                 {
                     FullPath = path,
                     Filename = System.IO.Path.GetFileName(path),
-                    Approved = false
+                    Approved = false,
+                    Author = author
                 };
 
 
@@ -250,6 +258,15 @@ namespace Greenwell.Controllers
             {
                 return StatusCode(500, new { error = e.Message, status = "500" });
             }
+
+            //Finally we send an email to all admins about the new file, this method of handling new files is just a proof of concept.
+            foreach (var email in userManager.GetUsersInRoleAsync("Administrator").Result) {
+               await emailSender.SendEmailAsync(
+                    email.Email,
+                    "File Requiring Approval",
+                    $"A file, {path} has been uploaded by {author} with the tags: {tags.ToString()} and requires approval.");
+            }
+            
             return Ok(new { message = "File was added successfully.", status = "200" });
         }
 
@@ -257,9 +274,9 @@ namespace Greenwell.Controllers
         //Functionality to add a file from the User.
         [HttpPost("AdminAddFileFromUpload")]
         [Authorize(Roles = "Administrator")]
-        public async Task<ActionResult> AdminAddFileFromUpload([FromForm] string path, [FromForm] IFormFile f, string[] tags, bool adminAccessOnly)
+        public async Task<ActionResult> AdminAddFileFromUpload([FromForm] string path, [FromForm] IFormFile f, [FromForm] string author, string[] tags, bool adminAccessOnly)
         {
-            if (_context.Files.Where(f => (f.FullPath.Equals(path))).Any())
+            if (_context.Files.Where(g => (g.FullPath.Equals(path))).Any())
             {
                 return Ok(new { message = "Unable to upload duplicate file.", status = "201" });
             }
@@ -303,6 +320,7 @@ namespace Greenwell.Controllers
                     FullPath = path,
                     Filename = System.IO.Path.GetFileName(path),
                     AdminOnly = adminAccessOnly,
+                    Author = author,
                     Approved = true
                 };
 
@@ -578,6 +596,20 @@ namespace Greenwell.Controllers
         [HttpPost("DownloadAFile")]
         public IActionResult DownloadFile([FromForm] string filePath)
         {
+            var file = _context.Files.SingleOrDefault(a => a.FullPath == filePath);
+
+            //We check to see if the files exists in the database so they download corrupted, non-existent files.
+            if (file == null)
+            {
+                return StatusCode(500, new { message = "File could not be found.", status = "403" });
+            }
+            //We then check to see if the file is AdminOnly or requires approval, they shouldn't be able to even download files that fail this check, but someone could call this malicously.
+            else if (file.AdminOnly == true || (file.Approved == true))
+            {
+                return StatusCode(500, new { message = "Your not authorized to access this file.", status = "401" });
+            }
+
+            //Otherwise return the file
             var net = new System.Net.WebClient();
             string localStorage = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\GreenWellLocalStorage";
             filePath = filePath.Replace("/", @"\");
@@ -589,6 +621,31 @@ namespace Greenwell.Controllers
             return File(content, contentType, fileName);
         }
 
+
+        [Authorize(Roles = "Administrator")]
+        [HttpPost("AdminDownloadAFile")]
+        public IActionResult AdminDownloadFile([FromForm] string filePath)
+        {
+            var file = _context.Files.SingleOrDefault(a => a.FullPath == filePath);
+            //We check to see if the files exists in the database so they download corrupted, non-existent files.
+            if (file == null)
+            {
+                return StatusCode(500, new { message = "File could not be found.", status = "403" });
+            }
+
+
+            var net = new System.Net.WebClient();
+            string localStorage = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\GreenWellLocalStorage";
+            filePath = filePath.Replace("/", @"\");
+            string finalPath = @localStorage + @"\" + @filePath;
+            var data = net.DownloadData(finalPath);
+            var content = new System.IO.MemoryStream(data);
+            var contentType = "APPLICATION/octet-stream";
+            var fileName = "ahmed.jpeg";
+            return File(content, contentType, fileName);
+        }
+
+        [Authorize(Roles = "Administrator")]
         [HttpPost("UnapprovedFiles")]
         public ActionResult UnapprovedFiles()
         {
@@ -596,7 +653,7 @@ namespace Greenwell.Controllers
             return Ok(new { files = _context.Files.Where(p => p.Approved != true).ToList() });
         }
 
-        //Rename file
+        [Authorize(Roles = "Administrator")]
         [HttpPost("ResolveApproval")]
         public async Task<ActionResult> ResolveApproval([FromForm] string fullPath, [FromForm] bool approval)
         {
@@ -625,7 +682,7 @@ namespace Greenwell.Controllers
             }
             catch (Exception e)
             {
-                return StatusCode(500, new { message = "File could not be deleted.", error = e.Message, status = "500" });
+                return StatusCode(500, new { message = "File could not be found.", error = e.Message, status = "500" });
             }
         }
         }

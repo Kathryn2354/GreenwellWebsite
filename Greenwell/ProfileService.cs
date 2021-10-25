@@ -32,6 +32,7 @@ public class ProfileService : IProfileService
             roleClaims.Add(new Claim(JwtClaimTypes.Role, role));
         }
         context.IssuedClaims.Add(new Claim(JwtClaimTypes.Name, user.UserName));
+        context.IssuedClaims.Add(new Claim(JwtClaimTypes.Email, user.Email));
         context.IssuedClaims.AddRange(roleClaims);
         //Add more claims as you need
     }
