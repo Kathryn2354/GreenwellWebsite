@@ -25,7 +25,7 @@ namespace Greenwell.Services
             var client = new SendGridClient(apiKey);
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress("gwfexecutivedirector@gmail.com", Options.SendGridUser),
+                From = new EmailAddress("wjfield@smcm.edu", Options.SendGridUser),//i do not understand how this second parameter (Options.SendGridUser) works
                 Subject = subject,
                 PlainTextContent = message,
                 HtmlContent = message

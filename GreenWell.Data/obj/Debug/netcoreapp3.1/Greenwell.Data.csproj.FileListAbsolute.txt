@@ -5,3 +5,13 @@ C:\Users\th3wa\Documents\GitHub\COSC401MajorProject201920\Greenwell.Data\obj\Deb
 C:\Users\th3wa\Documents\GitHub\COSC401MajorProject201920\Greenwell.Data\obj\Debug\netcoreapp3.1\Greenwell.Data.AssemblyInfo.cs
 C:\Users\th3wa\Documents\GitHub\COSC401MajorProject201920\Greenwell.Data\obj\Debug\netcoreapp3.1\Greenwell.Data.dll
 C:\Users\th3wa\Documents\GitHub\COSC401MajorProject201920\Greenwell.Data\obj\Debug\netcoreapp3.1\Greenwell.Data.pdb
+C:\Users\wfiel\Source\Repos\401GreenWellProject\Greenwell.Data\bin\Debug\netcoreapp3.1\Greenwell.Data.deps.json
+C:\Users\wfiel\Source\Repos\401GreenWellProject\Greenwell.Data\bin\Debug\netcoreapp3.1\Greenwell.Data.dll
+C:\Users\wfiel\Source\Repos\401GreenWellProject\Greenwell.Data\bin\Debug\netcoreapp3.1\Greenwell.Data.pdb
+C:\Users\wfiel\Source\Repos\401GreenWellProject\Greenwell.Data\obj\Debug\netcoreapp3.1\Greenwell.Data.csproj.AssemblyReference.cache
+C:\Users\wfiel\Source\Repos\401GreenWellProject\Greenwell.Data\obj\Debug\netcoreapp3.1\Greenwell.Data.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\wfiel\Source\Repos\401GreenWellProject\Greenwell.Data\obj\Debug\netcoreapp3.1\Greenwell.Data.AssemblyInfoInputs.cache
+C:\Users\wfiel\Source\Repos\401GreenWellProject\Greenwell.Data\obj\Debug\netcoreapp3.1\Greenwell.Data.AssemblyInfo.cs
+C:\Users\wfiel\Source\Repos\401GreenWellProject\Greenwell.Data\obj\Debug\netcoreapp3.1\Greenwell.Data.csproj.CoreCompileInputs.cache
+C:\Users\wfiel\Source\Repos\401GreenWellProject\Greenwell.Data\obj\Debug\netcoreapp3.1\Greenwell.Data.dll
+C:\Users\wfiel\Source\Repos\401GreenWellProject\Greenwell.Data\obj\Debug\netcoreapp3.1\Greenwell.Data.pdb

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\th3wa\\Documents\\GitHub\\COSC401MajorProject201920\\Greenwell.Data\\Greenwell.Data.csproj": {}
+    "C:\\Users\\wfiel\\Source\\Repos\\401GreenWellProject\\Greenwell.Data\\Greenwell.Data.csproj": {}
   },
   "projects": {
-    "C:\\Users\\th3wa\\Documents\\GitHub\\COSC401MajorProject201920\\Greenwell.Data\\Greenwell.Data.csproj": {
+    "C:\\Users\\wfiel\\Source\\Repos\\401GreenWellProject\\Greenwell.Data\\Greenwell.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\th3wa\\Documents\\GitHub\\COSC401MajorProject201920\\Greenwell.Data\\Greenwell.Data.csproj",
+        "projectUniqueName": "C:\\Users\\wfiel\\Source\\Repos\\401GreenWellProject\\Greenwell.Data\\Greenwell.Data.csproj",
         "projectName": "Greenwell.Data",
-        "projectPath": "C:\\Users\\th3wa\\Documents\\GitHub\\COSC401MajorProject201920\\Greenwell.Data\\Greenwell.Data.csproj",
-        "packagesPath": "C:\\Users\\th3wa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\th3wa\\Documents\\GitHub\\COSC401MajorProject201920\\Greenwell.Data\\obj\\",
+        "projectPath": "C:\\Users\\wfiel\\Source\\Repos\\401GreenWellProject\\Greenwell.Data\\Greenwell.Data.csproj",
+        "packagesPath": "C:\\Users\\wfiel\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\wfiel\\Source\\Repos\\401GreenWellProject\\Greenwell.Data\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\th3wa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\wfiel\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,6 +26,7 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -37,6 +38,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "dependencies": {
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
@@ -66,7 +68,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.101\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.401\\RuntimeIdentifierGraph.json"
         }
       }
     }
