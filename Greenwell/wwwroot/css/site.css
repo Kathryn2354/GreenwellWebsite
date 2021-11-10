@@ -9,6 +9,8 @@ a.navbar-brand {
 
 /* Sticky footer styles
 -------------------------------------------------- */
+
+
 html {
   font-size: 14px;
 }
@@ -17,6 +19,7 @@ html {
     font-size: 16px;
   }
 }
+
 
 .container {
   max-width: 960px;
@@ -49,10 +52,6 @@ html {
   min-height: 100%;
 }
 
-body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-}
 .footer {
   position: absolute;
   bottom: 0;
@@ -63,3 +62,74 @@ body {
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
 }
+
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
+
+/* NEW CODE BELOW*/
+
+a {
+    color: #10bce6;
+    
+}
+
+.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+    color: #fff;
+    background-color: #10bce6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #10bce6;
+    border-color: #10bce6;
+    font-size: 24px;
+}
+
+.navbar-expand-sm .navbar-nav .nav-link {
+    height: 50px;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    border: 1px solid #10bce6;
+    border-radius: 5px;
+}
+
+.navbar-nav .nav-item {
+    background-color: #10bce6;
+    border: 1px solid white;
+    border-radius: 5px;
+}
+.navbar-nav .nav-item:hover {
+    background-color: #0366d6;
+    color: #f8f9fa;
+}
+
+.text-dark {
+    color: #f8f9fa !important; /*This 'important' tag is needed to override an 'important' tag from bootstrap*/
+    font-size: 1.5rem;
+}
+
+a.text-dark:hover {
+    color: #f8f9fa!important;
+}
+
+body {
+    font-size: 1.5rem;
+}
+
+a.nav-link:hover {
+    background-color: #0366d6;
+    color: #f8f9fa;
+}
+
+element.style {
+    cursor: default;
+    background-color: #f8f9fa;
+}
+
+
+
+
+/* END OF NEW CODE */

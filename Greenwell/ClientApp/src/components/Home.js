@@ -6,7 +6,7 @@ import { Typeahead } from 'react-bootstrap-typeahead';
 import FileBrowser, { Icons } from 'react-keyed-file-browser';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faFolder, faImage, faFilePdf, faTrash, faFolderOpen, faFileSignature, faSpinner } from '@fortawesome/free-solid-svg-icons';
-import '../react-keyed-file-browser.css';
+import '../react-keyed-file-browser.css'
 import '../Typeahead.css';
 import uploadButton from '../logos/upload.png';
 import searchButton from '../logos/search.png';
@@ -36,8 +36,7 @@ export class Home extends Component {
             downloadFileName: "",
             uploading: false,
             searchBy: "fileName",
-            role: null,
-            name: null
+            role: null
 
         };
         // check and create the local storage
@@ -85,6 +84,7 @@ export class Home extends Component {
                     };
                     t.push(r1);
                 }
+
                 this.setState({
                     loading: false,
                     //filesLoaded: true,
@@ -98,8 +98,7 @@ export class Home extends Component {
         // get the state of the user and pass role of the user to previous method to get files
         const [user] = await Promise.all([authService.getUser()]);
         this.setState({
-            role: user && user.role,
-            name: user && user.name
+            role: user && user.role
         }, () => getFiles(this.state.role == "Administrator"));
     }
 
@@ -143,10 +142,9 @@ export class Home extends Component {
                     }])
                     return state
                 })
+                alert(json.message);
             }
-            else {
-                this.showAlertModal(json.message);
-            }
+            else alert(json.message);
         }
         // call it
         createFolder();
@@ -178,10 +176,9 @@ export class Home extends Component {
                     state.files = newFiles;
                     return state
                 });
+                alert(json.message);
             }
-            else {
-                this.showAlertModal(json.message);
-            }
+            else alert(json.message);
         }
         // call it
         deleteFolder();
@@ -192,12 +189,6 @@ export class Home extends Component {
         if (oldKey.charAt(0) == "/") {
             oldKey = oldKey.substring(1, oldKey.length);
         }
-
-        //If the user didn't rename the holder, we don't call the method.
-        if (oldKey === newKey) {
-            return
-        }
-
         const rf = [oldKey, newKey]
         // create async function
         let renameFolder = async (p) => {
@@ -230,11 +221,9 @@ export class Home extends Component {
                     state.files = newFiles
                     return state
                 })
+                alert(json.message);
             }
-            else {
-                this.showAlertModal(json.message);
-            }
-
+            else alert(json.message);
         }
         // call it
         renameFolder(rf);
@@ -243,12 +232,6 @@ export class Home extends Component {
     handleRenameFile = (oldKey, newKey) => {
         // store old and new file names
         const rf = [oldKey, newKey]
-
-        //If the old name and the new name are the same, we don't call the method
-        if (oldKey === newKey) {
-            return
-        }
-
         // create async function
         let renameFile = async (p) => {
             const token = await authService.getAccessToken();
@@ -266,7 +249,6 @@ export class Home extends Component {
                 this.setState(state => {
                     this.setState(state => {
                         const newFiles = []
-                        //Add all the new files to teh file browser
                         state.files.map((file) => {
                             if (file.key === oldKey) {
                                 newFiles.push({
@@ -285,10 +267,9 @@ export class Home extends Component {
                         return state
                     })
                 })
+                alert(json.message);
             }
-            else {
-                this.showAlertModal(json.message);
-            }
+            else alert(json.message);
         }
         // call it
         renameFile(rf);
@@ -324,10 +305,9 @@ export class Home extends Component {
                     state.downloadFileName = ""
                     return state
                 })
+                alert(json.message);
             }
-            else {
-                this.showAlertModal(json.message);
-            }
+            else alert(json.message);
         }
         // call it
         deleteFile(df);
@@ -342,13 +322,6 @@ export class Home extends Component {
             uploading: false
         });
     }
-
-    showAlertModal = (message) => {
-        this.setState({
-            showAlertModal: true,
-            alertMessage: message
-        })
-    } 
 
     handleModalShow = () => {
         this.setState({
@@ -388,7 +361,6 @@ export class Home extends Component {
             formData.append("path", fullPath)
             formData.append("f", this.state.uploadFile);
             formData.append("tags", tags);
-            formData.append("author", this.state.name)
             if (document.getElementById("adminCheckBox") == null)
                 formData.append("adminAccessOnly", document.getElementById("adminCheckBox"));
             else
@@ -403,16 +375,16 @@ export class Home extends Component {
             });
 
             const json = await response.json();
-            //Even if successful, we don't add the file to the browser if the user isn't an admin because it needs to be approved if they aren't an Administrator.
             if (json.status === "200") {
-                //If they are an Administrator we add the uploaded file to the file browser
+
+                //We don't add the file to the browser if the user isn't an admin becuase it needs to be approved.
                 if (this.state.role == "Administrator") {
                     this.setState(state => {
                         const addedNewFile = [];
-                        addedNewFile.push({ 
-                          key: this.state.uploadFilePath + this.state.uploadFileName,
-                          size: 1000,
-                          modified: +Moment(),
+                        addedNewFile.push({
+                            key: this.state.uploadFilePath + this.state.uploadFileName,
+                            size: 1000,
+                            modified: +Moment(),
                         });
 
                         const uniqueNewFiles = []
@@ -432,36 +404,37 @@ export class Home extends Component {
                         return state
 
                     });
-                    //Hide the upload modal
-                    this.setState({
-                        showModal: false,
-                        uploadFile: null,
-                        uploadFileName: "",
-                        uploadFilePath: "",
-                        uploading: false
-                    });
                 }
-                //Otherwise we close the modal and tell the user the file has been sent to upload.
                 else {
                     this.setState({
+                        showAlertModal: true,
                         showModal: false,
                         uploadFile: null,
                         uploadFileName: "",
                         uploadFilePath: "",
                         uploading: false,
+                        alertMessage: "File has been sent for approval."
                     })
-                    this.showAlertModal("File has been sent for approval");
+                    return
                 }
-            }
-            else if (json.status === "201") {
                 this.setState({
                     showModal: false,
                     uploadFile: null,
                     uploadFileName: "",
                     uploadFilePath: "",
-                    uploading: false,
+                    uploading: false
                 });
-                this.showAlertModal("Unable to upload duplicate files.");
+            }
+            else if (json.status === "201") {
+                this.setState({
+                    showAlertModal: true,
+                    showModal: false,
+                    uploadFile: null,
+                    uploadFileName: "",
+                    uploadFilePath: "",
+                    uploading: false,
+                    alertMessage: "Unable to upload duplicate file."
+                })
             }
         }
         addFile();
@@ -476,24 +449,14 @@ export class Home extends Component {
             let formData = new FormData();
             formData.append("filePath", filePath)
             const token = await authService.getAccessToken();
-            const response = await fetch((this.state.role == "Administrator") ? 'api/GreenWellFiles/AdminDownloadAFile' : 'api/GreenWellFiles/DownloadAFile', {
+            const response = await fetch('api/GreenWellFiles/DownloadAFile', {
                 method: 'POST',
                 body: formData,
                 headers: !token ? {} : { 'Authorization': `Bearer ${token}` }
             });
 
-            if (response.ok) {
-                const blob = await response.blob();
-                saveAs(blob, fileName);
-            }
-            else if (response.status === 401) {
-                console.log(response)
-                this.showAlertModal("Your not authorized to download that file.");
-            }
-            else{
-                console.log(response)
-                this.showAlertModal("Unable to download file.");
-            }
+            const blob = await response.blob();
+            saveAs(blob, fileName);
         }
         downloadFile();
     }
@@ -635,26 +598,44 @@ export class Home extends Component {
         }
         let content;
         if (loading) {
-            content =
+            /*content =
                 (
                     <div style={{ paddingLeft: "40px", marginTop: "20px" }}>
                         <h1>Loading</h1>
                         < FontAwesomeIcon className="fa-2x" icon={faSpinner} pulse />
                     </div>
-                );
+                ); */
         }
         let download = (
-            <div style={{ textAlign: "right" }}>
+           // <div style={{ textAlign: "right" }}>
                 <Button onClick={this.handleFileDownload}>Download</Button>
-            </div>
+            //</div>
         );
         if (this.state.downloadFileName.trim() === "") {
             download = (
-                <div style={{ textAlign: "right" }}>
-                    <Button style={{ cursor: "default", backgroundColor: "gray" }}>Download</Button>
-                </div>
+                //<div style={{ textAlign: "right" }}>
+                    <Button style={{ border: "1px solid white", float: "right", cursor: "default", backgroundColor: "#10bce6"  }}>Download</Button>
+                //</div>
             );
         }
+
+        //ADDED IN THE UPLOAD FILE BUTTON HERE
+
+        let upload = (
+                //<div style={{ textAlign: "right" }}>
+                <Button onClick={this.props.handleModalShow}>Upload File</Button>
+                //</div>
+        ); 
+
+         if (this.state.uploadFileName == "") {
+ 
+ 
+             upload = (
+                 //<div style={{ textAlign: "right"}}>
+                 <Button style={{border: "1px solid white", float:"right", cursor: "default", backgroundColor: "#10bce6" }}>Upload File</Button>
+                // </div>
+             );
+         };
         //    if (noFiles && !loading) {
         //        content =
         //            (
@@ -679,7 +660,8 @@ export class Home extends Component {
                         <div id="file_browser" className="div-files">
                             {deletePermission}
                         </div>
-                        {download}
+                    {download}
+                    {upload}
                         <Modal show={this.state.showModal} onHide={this.handleModalClose}>
                             {modalHeader}
                             {modalBody}
@@ -695,7 +677,7 @@ export class Home extends Component {
                                         <Col style={{ width: "50%", textAlign: "center" }}>
                                             <Button variant="secondary" onClick={this.handleModalClose}>
                                                 Close
-                                        </Button>
+                                            </Button>
                                         </Col>
                                         <Col style={{ width: "50%", textAlign: "center" }}>
                                             {browseOrUpload}
@@ -794,7 +776,7 @@ class GreenWellNavMenu extends Component {
                         </Dropdown.Menu>
                     </Dropdown>
                     <Form inline>
-                        <FormControl id="search" onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); }}} onChange={() => this.Search(document.getElementById("search").value)} style={{ height: "45px", backgroundColor: "transparent", border: "2px solid white" }} type="text" placeholder="Search" />
+                        <FormControl id="search" onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); } }} onChange={() => this.Search(document.getElementById("search").value)} style={{ height: "45px", backgroundColor: "transparent", border: "2px solid white" }} type="text" placeholder="Search" />
                         <Button onClick={() => this.Search(document.getElementById("search").value)} className="search-button">
                             <Image src={searchButton} />
                         </Button>

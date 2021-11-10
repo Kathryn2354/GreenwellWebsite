@@ -50,20 +50,22 @@ export class LoginMenu extends Component {
             if (this.state.role == "Administrator") {
                 return (<Fragment>
                     <NavItem>
-                        <NavLink tag={Link} className="text-dark" to={profilePath}>Hello {userName}</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink tag={Link} className="text-dark" to={logoutPath}>Logout</NavLink>
+                     
+                        <NavLink tag={Link} className="text-dark" to={profilePath}>Your Profile</NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink tag={Link} className="text-dark" to="/Admin/Manage">Admin Only/Handle Users</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink tag={Link} className="text-dark" to={logoutPath}>Logout</NavLink>
+                    </NavItem>
+                    
                 </Fragment>);
             }
             else {
                 return (<Fragment>
                     <NavItem>
-                        <NavLink tag={Link} className="text-dark" to={profilePath}>Hello {userName} | Employee</NavLink>
+                        <NavLink tag={Link} className="text-dark" to={profilePath}>Your Profile</NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink tag={Link} className="text-dark" to={logoutPath}>Logout</NavLink>
