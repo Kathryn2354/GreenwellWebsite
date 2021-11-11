@@ -89,7 +89,7 @@ export class Home extends Component {
                     loading: false,
                     //filesLoaded: true,
                     //noFiles: false,
-                    files: t,
+                    files: t,                                 //make sure u remove this as a comment, displays files
                     tagsForFilter: json.tags
                 });
             }
