@@ -1,18 +1,9 @@
 /* Provide sufficient contrast against white background */
-a {
-    color: #0366d6;
-}
+
 
 code {
     color: #E01A76;
 }
-
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
 
 .GreenWell-Nav-Menu {
     background-image: url('./logos/navbar.png');
@@ -22,14 +13,18 @@ code {
 }
 
 .upload-Button1 {
+
+    display: none;
     border: 2px solid white;
     border-radius: 5px;
-    background-color: #73a353;
+    background-color: transparent;
     height: 55px;
     padding-right: 50px;
 }
 
 .upload-Button2 {
+    
+    display: none;
     background-color: #73a353;
     border: 2px solid;
     border-radius: 5px;
@@ -47,15 +42,12 @@ code {
     color: transparent;
 }
 
-    .search-button:hover {
-        background-color: transparent;
-    }
-
 .upload-footer {
     position: fixed;
     bottom: 0;
     width: 99%;
     padding-bottom: 15px;
+
 }
 
 .div-files {
@@ -81,3 +73,50 @@ input.form-control-file {
 .drop-down-item-style:hover {
     background-color: none !important;
 }
+
+/* NEW CODE BELOW */
+
+a {
+    color: #10bce6;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #10bce6;
+    border-color: #10bce6;
+}
+
+.navbar-expand-sm .navbar-nav .nav-link {
+    
+    height: 50px;
+    padding-right: 0.5rem;
+    padding-left: 0.5rem;
+    border: 1px solid #10bce6;
+    border-radius: 5px;
+}
+
+.navbar-nav .nav-item {
+    background-color: #10bce6;
+    border: 1px solid white;
+    border-radius: 5px;
+    
+}
+
+.navbar-nav .nav-item:hover {
+    background-color: #0366d6;
+}
+
+.search-button:hover {
+    background-color: #0366d6;
+}
+
+.text-dark {
+    color: #f8f9fa !important; /*This 'important' tag is needed to override an 'important' tag from bootstrap*/
+    font-size: 1.5rem;
+}
+
+a.text-dark:hover {
+    color: #f8f9fa !important;
+}
+
+    /* END OF NEW CODE */
