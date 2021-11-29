@@ -488,7 +488,7 @@ export class Home extends Component {
         if (uploadFileName === "") {
             modalHeader = (
                 <Modal.Header style={{ backgroundColor: "whiteSmoke" }} closeButton>
-                    <Modal.Title>Upload A File.</Modal.Title>
+                    <Modal.Title>Upload A File</Modal.Title>
                 </Modal.Header>
             );
             modalBody = (
@@ -607,14 +607,14 @@ export class Home extends Component {
                 ); */
         }
         let download = (
-           // <div style={{ textAlign: "right" }}>
-                <Button onClick={this.handleFileDownload}>Download</Button>
+            // <div style={{ textAlign: "right" }}>
+            <Button onClick={this.handleFileDownload}>Download</Button>
             //</div>
         );
         if (this.state.downloadFileName.trim() === "") {
             download = (
                 //<div style={{ textAlign: "right" }}>
-                    <Button style={{ border: "1px solid white", float: "right", cursor: "default", backgroundColor: "#10bce6"  }}>Download</Button>
+                    <Button style={{ border: "1px solid white", cursor: "default", backgroundColor: "#10bce6"  }}>Download</Button>
                 //</div>
             );
         }
@@ -623,19 +623,21 @@ export class Home extends Component {
 
         let upload = (
                 //<div style={{ textAlign: "right" }}>
-                <Button onClick={this.props.handleModalShow}>Upload File</Button>
+            <Button onClick={this.handleModalShow}>Upload File</Button>
+            
                 //</div>
         ); 
 
-         if (this.state.uploadFileName == "") {
- 
+      
+        if (this.state.uploadFile == true) {
  
              upload = (
                  //<div style={{ textAlign: "right"}}>
-                 <Button style={{border: "1px solid white", float:"right", cursor: "default", backgroundColor: "#10bce6" }}>Upload File</Button>
+                 <Button style={{border: "1px solid white", cursor: "default", backgroundColor: "#10bce6" }}>Upload File</Button>
                 // </div>
              );
          };
+         
         //    if (noFiles && !loading) {
         //        content =
         //            (
