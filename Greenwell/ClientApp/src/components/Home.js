@@ -106,6 +106,10 @@ export class Home extends Component {
         }, () => getFiles(this.state.role == "Administrator"));
     }
 
+
+
+
+
     //Function that handles when a file is clicked on within react file browser
     handleFileSelection = (selection) => {
 
@@ -131,10 +135,25 @@ export class Home extends Component {
             this.setState({
 
                 downloadFileName: "",
-                downloadFile: false
+                downloadFile: false,
+
             });
         }
     }
+
+    handleRemoveDownload = (selection) => {
+
+        this.setState({
+
+            downloadFileName: "",
+            downloadFile: false
+        })
+    }
+
+
+
+
+
 
     //Function that handles when a folder is clicked on with react file browser
     handleFolderSelection = (selection) => {
@@ -662,8 +681,7 @@ export class Home extends Component {
 
       
         if (this.state.uploadFile == true) {
- 
-             upload = (
+              upload = (
                  //<div style={{ textAlign: "right"}}>
                  <Button style={{float: "right", border: "1px solid white", cursor: "default", backgroundColor: "#10bce6" }}>Upload File</Button>
                 // </div>
@@ -690,8 +708,7 @@ export class Home extends Component {
         if (!loading) {
             content =
                 (
-               
-                    <React.Fragment >
+                    <React.Fragment>
                     <div id="file_browser" className="div-files">
                             {deletePermission}
                         </div>
@@ -738,8 +755,8 @@ export class Home extends Component {
                 );
         }
         return (
-            <div>
-                <GreenWellNavMenu setParentForFiles={this.setFiles} />
+            <div onClick={this.handleRemoveDownload} >
+                <GreenWellNavMenu setParentForFiles = {this.setFiles } />
                 {content}
                 <Footer/>
             </div>
@@ -811,7 +828,7 @@ class GreenWellNavMenu extends Component {
                             <Dropdown.Item className="drop-down-item-style" eventKey="tags" active={this.state.searchBy === "tags"}> By Tags</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
-                    <Form inline>
+                    <Form inline>  
                         <FormControl id="search" onKeyPress={event => { if (event.key === "Enter") { event.preventDefault(); } }} onChange={() => this.Search(document.getElementById("search").value)} style={{ height: "45px", backgroundColor: "transparent", border: "2px solid white" }} type="text" placeholder="Search" />
                         <Button onClick={() => this.Search(document.getElementById("search").value)} className="search-button">
                             <Image src={searchButton} />
