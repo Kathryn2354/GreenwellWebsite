@@ -13,7 +13,7 @@ namespace Greenwell.Data.Models
         public int FileId { get; set; }
         public string Filename { get; set; }
         public string FullPath { get; set; }
-        public string Author { get; set; }
+        public int? Author { get; set; }
         public DateTime? UploadDate { get; set; }
         public string ExtType { get; set; }
         public double? FileSize { get; set; }
@@ -21,6 +21,7 @@ namespace Greenwell.Data.Models
         public bool? Approved { get; set; }
 
 
+        public Users AuthorNavigation { get; set; }
         public ICollection<Tagmap> Tagmap { get; set; }
     }
 }
