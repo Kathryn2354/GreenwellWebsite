@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component} from "react";
 import { Button, FormControl, Container, Navbar, Nav, InputGroup, Modal, Row, Image, Form, Dropdown, ButtonGroup, Col } from 'react-bootstrap';
 import ReactDOM from 'react-dom';
 import Moment from 'moment';
@@ -15,7 +15,8 @@ import { saveAs } from 'file-saver';
 import authService from './api-authorization/AuthorizeService';
 
 export class Home extends Component {
-    displayName = Home.name
+
+    displayName = Home.name;
 
     constructor(props) {
         super(props);
@@ -34,11 +35,14 @@ export class Home extends Component {
             showAlertModal: false,
             alertMessage: null,
             downloadFileName: "",
+            downloadFile: false,
             uploading: false,
             searchBy: "fileName",
+            //eventkey:"",
             role: null
 
         };
+
         // check and create the local storage
         this.createStorage();
 
@@ -102,24 +106,45 @@ export class Home extends Component {
         }, () => getFiles(this.state.role == "Administrator"));
     }
 
-
     //Function that handles when a file is clicked on within react file browser
     handleFileSelection = (selection) => {
-        this.setState({
-            uploadFilePath: "",
-            downloadFileName: selection.key
-        });
+
+            this.setState({
+                uploadFilePath: "",
+                downloadFile: true,
+                downloadFileName: selection.key
+            })
+    }
+
+    componentDidMount() {
+        document.addEventListener('click', this.handleClickOutside, true);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('click', this.handleClickOutside, true);
+    }
+
+    handleClickOutside = event => {
+        const domNode = ReactDOM.findDOMNode(this);
+
+        if (!domNode || !domNode.contains(event.target)) {
+            this.setState({
+
+                downloadFileName: "",
+                downloadFile: false
+            });
+        }
     }
 
     //Function that handles when a folder is clicked on with react file browser
     handleFolderSelection = (selection) => {
+
         this.setState({
             uploadFilePath: selection.key,
+            downloadFile: false,
             downloadFileName: ""
         });
-
     }
-
 
     handleCreateFolder = (key) => {
         // create object
@@ -343,6 +368,7 @@ export class Home extends Component {
 
     }
 
+
     handleAddFileFromUpload = () => {
         let tags = [];
         if (!this.state.tagsForFileUpload.length == 0) {
@@ -443,6 +469,7 @@ export class Home extends Component {
     handleFileDownload = () => {
         // assign to variable
         //alert(this.state.downloadFileName);
+
         let filePath = this.state.downloadFileName;
         let fileName = filePath.split("/")[filePath.split("/").length - 1];
         let downloadFile = async () => {
@@ -458,8 +485,11 @@ export class Home extends Component {
             const blob = await response.blob();
             saveAs(blob, fileName);
         }
-        downloadFile();
+
+            downloadFile();
+
     }
+
 
     setFiles = (fs) => {
         var i;
@@ -482,12 +512,16 @@ export class Home extends Component {
     }
 
     render() {
-        const { loading, changeModalBody, uploadFile, uploadFileName, uploadFilePath, tagsForFilter } = this.state;
+
+
+        const { loading, changeModalBody, uploadFile, uploadFileName, uploadFilePath, tagsForFilter, downloadFile } = this.state;
         let modalHeader;
         let modalBody;
+       
+        
         if (uploadFileName === "") {
             modalHeader = (
-                <Modal.Header style={{ backgroundColor: "whiteSmoke" }} closeButton>
+                <Modal.Header style={{ backgroundColor: "whiteSmoke", textAlign:"center"}} closeButton>
                     <Modal.Title>Upload A File</Modal.Title>
                 </Modal.Header>
             );
@@ -549,7 +583,6 @@ export class Home extends Component {
                 onSelectFile={this.handleFileSelection}
                 onSelectFolder={this.handleFolderSelection}
 
-
             // onCreateFiles={this.handleCreateFiles}
 
             //onMoveFolder={this.handleRenameFolder}
@@ -577,6 +610,7 @@ export class Home extends Component {
                         onRenameFile={this.handleRenameFile}
                         onSelectFile={this.handleFileSelection}
                         onSelectFolder={this.handleFolderSelection}
+                   
 
 
                     // onCreateFiles={this.handleCreateFiles}
@@ -606,24 +640,22 @@ export class Home extends Component {
                     </div>
                 ); */
         }
-        let download = (
-            // <div style={{ textAlign: "right" }}>
-            <Button onClick={this.handleFileDownload}>Download</Button>
-            //</div>
+        let download = (   
+            <Button className={"dl-button-active"} onClick={this.handleFileDownload} style={{float: "right", backgroundColor:"#10bce6"}}>Download</Button>
         );
-        if (this.state.downloadFileName.trim() === "") {
+
+
+        if (downloadFile == false) {
             download = (
-                //<div style={{ textAlign: "right" }}>
-                    <Button style={{ border: "1px solid white", cursor: "default", backgroundColor: "#10bce6"  }}>Download</Button>
-                //</div>
+                <Button style={{ float: "right", border: "1px solid white", cursor: "default", backgroundColor: "gray" }}>Download</Button>
             );
         }
 
         //ADDED IN THE UPLOAD FILE BUTTON HERE
 
         let upload = (
-                //<div style={{ textAlign: "right" }}>
-            <Button onClick={this.handleModalShow}>Upload File</Button>
+            //<div style={{ textAlign: "right" }}>
+            <Button onClick={this.handleModalShow} style={{ float: "right", border: "1px solid white" }}>Upload File</Button>
             
                 //</div>
         ); 
@@ -633,7 +665,7 @@ export class Home extends Component {
  
              upload = (
                  //<div style={{ textAlign: "right"}}>
-                 <Button style={{border: "1px solid white", cursor: "default", backgroundColor: "#10bce6" }}>Upload File</Button>
+                 <Button style={{float: "right", border: "1px solid white", cursor: "default", backgroundColor: "#10bce6" }}>Upload File</Button>
                 // </div>
              );
          };
@@ -658,8 +690,9 @@ export class Home extends Component {
         if (!loading) {
             content =
                 (
-                    <React.Fragment>
-                        <div id="file_browser" className="div-files">
+               
+                    <React.Fragment >
+                    <div id="file_browser" className="div-files">
                             {deletePermission}
                         </div>
                     {download}
@@ -708,6 +741,7 @@ export class Home extends Component {
             <div>
                 <GreenWellNavMenu setParentForFiles={this.setFiles} />
                 {content}
+                <Footer/>
             </div>
         );
     }
@@ -789,7 +823,9 @@ class GreenWellNavMenu extends Component {
     }
 }
 
+            /*
 class UploadButton extends Component {
+
     render() {
         return (
             <Row style={{ marginTop: "15px", float: "right", paddingRight: "50px" }} className="ml-auto">
@@ -802,11 +838,14 @@ class UploadButton extends Component {
     }
 }
 
+// <UploadButton handleModalShow={this.props.handleModalShow} />
+
+*/
+
 class Footer extends Component {
     render() {
         return (
-            <div className="upload-footer">
-                <UploadButton handleModalShow={this.props.handleModalShow} />
+            <div>
             </div>
         );
     }

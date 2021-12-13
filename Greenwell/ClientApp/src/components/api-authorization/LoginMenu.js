@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import authService from './AuthorizeService';
 import { ApplicationPaths } from './ApiAuthorizationConstants';
 
+
 export class LoginMenu extends Component {
     constructor(props) {
         super(props);
@@ -50,15 +51,15 @@ export class LoginMenu extends Component {
             if (this.state.role == "Administrator") {
                 return (<Fragment>
                     <NavItem>
-                     
                         <NavLink tag={Link} className="text-dark" to={profilePath}>Your Profile</NavLink>
                     </NavItem>
                     <NavItem>
-                        <NavLink tag={Link} className="text-dark" to="/Admin/Manage">Admin Only/Handle Users</NavLink>
+                        <NavLink tag={Link} className="text-dark" to="/Admin/Manage">Admin Only</NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink tag={Link} className="text-dark" to={logoutPath}>Logout</NavLink>
                     </NavItem>
+                    
                     
                 </Fragment>);
             }

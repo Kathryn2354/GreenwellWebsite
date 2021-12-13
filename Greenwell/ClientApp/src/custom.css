@@ -1,6 +1,5 @@
 /* Provide sufficient contrast against white background */
 
-
 code {
     color: #E01A76;
 }
@@ -84,16 +83,27 @@ a {
     color: #fff;
     background-color: #10bce6;
     border-color: #10bce6;
+    font-size: 21px;
+}
+
+.btn-secondary {
+    color: #fff;
+    background-color: #10bce6;
+    border-color: #10bce6;
+    font-size: 21px;
+}
+
+.btn-secondary:hover {
+        background-color: #0366d6;
 }
 
 .navbar-expand-sm .navbar-nav .nav-link {
-    
-    height: 50px;
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
-    border: 1px solid #10bce6;
-    border-radius: 5px;
-}
+        height: 50px;
+        padding-right: 0.5rem;
+        padding-left: 0.5rem;
+        border: 1px solid #10bce6;
+        border-radius: 5px;
+    }
 
 .navbar-nav .nav-item {
     background-color: #10bce6;
@@ -118,5 +128,121 @@ a {
 a.text-dark:hover {
     color: #f8f9fa !important;
 }
+
+a:hover {
+
+    text-decoration: none;
+}
+
+.search-button{
+
+    font-size: 16px !important;
+}
+
+
+
+.footer {
+    position: absolute;
+
+    height: 100px;
+
+}
+
+/*File search bar*/
+div.rendered-react-keyed-file-browser div.action-bar input[type="search"] {
+    
+    min-width:500px !important;
+    flex-grow: 0 !important;
+
+}
+
+
+/*Text displayed while logging/logged out*/
+.container-fluid, .container-sm, .container-md, .container-lg, .container-xl {
+    font-size: 21px;
+    text-align: center;
+}
+
+/*Dropdown items from home screen*/
+
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: #0366d6 !important;
+    color: white !important;
+}
+
+
+/*Home screen folders*/
+tr.folder:hover{
+        background-color:transparent !important;
+    }
+
+.folder.selected {
+    background-color: lightgray;
+}
+
+.folder.selected:hover {
+        background-color: lightgray !important;
+    }
+
+/*Add user button*/
+.svg-inline--fa.fa-w-20 {
+    color: #10bce6 !important;
+    float:left;
+
+}
+
+.svg-inline--fa.fa-w-20:hover {
+        color: #0366d6 !important;
+
+}
+
+/*Make user admin button*/
+.svg-inline--fa.fa-w-10 {
+        color: #10bce6 !important;
+}
+
+.svg-inline--fa.fa-w-10:hover {
+        color: #0366d6 !important;
+}
+/*Delete user button*/
+.svg-inline--fa.fa-w-14 {
+    color: #10bce6 !important;
+}
+
+    .svg-inline--fa.fa-w-14:hover {
+        color: #0366d6 !important;
+    }
+
+    /*Admin Actions table*/
+.table td {
+    background-color: #f8f9fa;
+}
+
+/*Download button*/
+
+.dl-button-active {
+    background-color: #0366d6 !important;
+    border: 1px solid white;
+}
+
+
+/*Modal headers*/
+
+/*.modal-title.h4{
+
+    margin-left: 100px;
+   
+}*/
+/*
+.svg-inline--fa {
+    color: #10bce6 !important;
+}
+
+    .svg-inline--fa:hover {
+        color: #0069d9 !important;
+    }
+
+    */
 
     /* END OF NEW CODE */
