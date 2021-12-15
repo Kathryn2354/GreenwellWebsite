@@ -69,7 +69,7 @@ CREATE TABLE `files` (
 
 LOCK TABLES `files` WRITE;
 /*!40000 ALTER TABLE `files` DISABLE KEYS */;
-INSERT INTO `files` VALUES (142,'CreateDatabase.sql','Empty/CreateDatabase.sql',NULL,NULL,NULL,NULL,NULL,1),(146,'Library Access.pdf','Empty/Library Access.pdf',NULL,NULL,NULL,NULL,NULL,1),(147,'SendGrid Secrets','SendGrid Secrets',NULL,NULL,NULL,NULL,1,1),(148,'ToDO','ToDO',NULL,NULL,NULL,NULL,1,1);
+/*INSERT INTO `files` VALUES (142,'CreateDatabase.sql','Empty/CreateDatabase.sql',NULL,NULL,NULL,NULL,NULL,1),(146,'Library Access.pdf','Empty/Library Access.pdf',NULL,NULL,NULL,NULL,NULL,1),(147,'SendGrid Secrets','SendGrid Secrets',NULL,NULL,NULL,NULL,1,1),(148,'ToDO','ToDO',NULL,NULL,NULL,NULL,1,1*/
 /*!40000 ALTER TABLE `files` ENABLE KEYS */;
 UNLOCK TABLES;
 

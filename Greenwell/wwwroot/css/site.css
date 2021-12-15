@@ -86,6 +86,7 @@ a {
     background-color: #10bce6;
     border-color: #10bce6;
     font-size: 24px;
+    margin-bottom: 2rem;
 }
 
 .navbar-expand-sm .navbar-nav .nav-link {
@@ -129,7 +130,24 @@ element.style {
     background-color: #f8f9fa;
 }
 
+.footer{
 
+    height:100px;
+}
+
+/*Manage profile page table*/
+
+.pb-3, .py-3{
+  
+}
+
+.fa-2x {
+    font-size: 1.5em;
+}
+
+.form-group {
+    margin-bottom: 2rem;
+}
 
 
 /* END OF NEW CODE */

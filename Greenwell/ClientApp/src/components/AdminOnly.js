@@ -214,12 +214,13 @@ export class AdminOnly extends Component {
     };
 
     render() {
-        let content = (
+        let content;
+        /*let content = (
             <div style={{ paddingLeft: "40px", marginTop: "20px" }}>
                 <h1>Loading</h1>
                 < FontAwesomeIcon className="fa-2x" icon={faSpinner} pulse />
             </div>
-        );
+        );*/
         if (!this.state.loading) {
             content = (
                 <React.Fragment>
@@ -306,17 +307,22 @@ export class AdminOnly extends Component {
                     <div style={{ display: "flex", justifyContent: "center" }}>
                         <h3>Admin Actions</h3>
                     </div>
+
                     <div style={{ display: "flex", justifyContent: "center" }}>
+                        <Link onClick={() => this.setState({ showAddUserModal: true })}>
+                            <FontAwesomeIcon title="Add New User" style={{color: "#73a353", marginRight: "20px"}} className="fa-2x" icon={faUserPlus} />
+                        </Link>
                         <Table striped bordered hover style={{ width: "85%" }}>
                             <thead>
                                 <tr>
                                     <th>Actions</th>
-                                    <th>Name</th>
+                                    <th>Name</th> 
                                     <th>Email</th>
                                     <th>Role</th>
                                 </tr>
                             </thead>
                             <tbody>
+
                                 {(this.state.adminUsers.length == 0 && this.state.nonAdminUsers.length == 0) &&
                                     <tr>
                                         <th>No Users (Only one main current Admin User).</th>
@@ -326,9 +332,12 @@ export class AdminOnly extends Component {
                                 }
                                 {this.state.adminUsers.length != 0 &&
                                     this.state.adminUsers.map(adminUsers =>
+
+
                                         <tr key={adminUsers.email}>
                                             <td>{
                                                 <React.Fragment>
+
                                                     <Link onClick={() => this.setState({ showDeleteUserModal: true, userInAction: adminUsers.email })}>
                                                         <FontAwesomeIcon title="Delete User" style={{ color: "#73a353" }} className="fa-2x" icon={faTrash} />
                                                     </Link>
@@ -349,8 +358,9 @@ export class AdminOnly extends Component {
                                         <tr key={nonAdminUsers.userName}>
                                             <td>{
                                                 <React.Fragment>
+
                                                     <Link onClick={() => this.setState({ showDeleteUserModal: true, userInAction: nonAdminUsers.email })}>
-                                                        <FontAwesomeIcon title="Delete User" style={{ color: "#73a353" }} className="fa-2x" icon={faTrash} />
+                                                        <FontAwesomeIcon title="Delete User" style={{ color: "#73a353"}} className="fa-2x" icon={faTrash} />
                                                     </Link>
                                                     <Link onClick={() => this.setState({ showMakeUserAdminModal: true, userInAction: nonAdminUsers.email })}>
                                                         <FontAwesomeIcon title="Make User Admin" style={{ color: "#73a353", marginLeft: "15px" }} className="fa-2x" icon={faLevelUpAlt} />
@@ -372,11 +382,6 @@ export class AdminOnly extends Component {
                             </tbody>
                         </Table>
                     </div>
-                    <Link onClick={() => this.setState({ showAddUserModal: true })}>
-                        <FontAwesomeIcon title="Add New User" style={{ color: "#73a353", marginLeft: "8%" }} className="fa-2x" icon={faUserPlus} />
-                    </Link>
-
-
 
 
                     <div style={{ display: "flex", justifyContent: "center" }}>
@@ -421,8 +426,8 @@ export class AdminOnly extends Component {
                             <tbody>
                                 {(this.state.files.length == 0) &&
                                     <tr>
-                                        <th>No files.</th>
-                                        <th>No files.</th>
+                                        <td>No files.</td>
+                                        <td>No files.</td>
                                     </tr>
                                 }
 
