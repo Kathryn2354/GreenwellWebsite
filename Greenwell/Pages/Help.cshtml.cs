@@ -10,11 +10,11 @@ namespace Greenwell.Pages.help_page
 {
     public class HelpModel : PageModel
     {
-        private readonly ILogger<HelpModel> _logger;
+        private readonly ILogger<HelpModel> _Logger;
 
         public HelpModel(ILogger<HelpModel> logger) 
         {
-            _logger = logger;
+            _Logger = logger;
         }
 
         public void OnGet()
